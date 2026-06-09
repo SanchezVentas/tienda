@@ -195,47 +195,59 @@
 
         // Lista de tus 31 servicios de streaming oficiales
         const listaProductos = [
-    // --- PERFILES (CUENTAS COMPARTIDAS) ---
-    { id: 1, nombre: "Netflix Perfil Privado", precio: 75, stock: 10, categoria: "perfiles" },
-    { id: 2, nombre: "Netflix Perfil Compartido", precio: 65, stock: 10, categoria: "perfiles" },
-    { id: 3, nombre: "Disney+ Premium Perfil", precio: 40, stock: 10, categoria: "perfiles" },
-    { id: 4, nombre: "Max (HBO) Estándar Perfil", precio: 30, stock: 10, categoria: "perfiles" },
-    { id: 5, nombre: "Max (HBO) Platino Perfil", precio: 39, stock: 10, categoria: "perfiles" },
-    { id: 6, nombre: "Prime Video Perfil", precio: 30, stock: 10, categoria: "perfiles" },
-    { id: 7, nombre: "ViX+ Perfil (1 Mes)", precio: 22, stock: 10, categoria: "perfiles" },
-    { id: 8, nombre: "ViX+ Perfil (2 Meses)", precio: 45, stock: 10, categoria: "perfiles" },
-    { id: 9, nombre: "Crunchyroll Perfil", precio: 49, stock: 10, categoria: "perfiles" },
-    { id: 10, nombre: "Paramount+ Perfil", precio: 49, stock: 10, categoria: "perfiles" },
-    { id: 11, nombre: "Apple TV+ Perfil", precio: 49, stock: 10, categoria: "perfiles" },
-    { id: 12, nombre: "Flujo TV Perfil", precio: 49, stock: 10, categoria: "perfiles" },
+    // Traemos las funciones necesarias de Firebase para leer datos
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    // --- CUENTAS COMPLETAS (PRIVADAS) ---
-    { id: 13, nombre: "Disney+ Premium Cuenta Completa", precio: 90, stock: 5, categoria: "cuentas" },
-    { id: 14, nombre: "Max (HBO) Estándar Cuenta Completa", precio: 50, stock: 5, categoria: "cuentas" },
-    { id: 15, nombre: "Max (HBO) Platino Cuenta Completa", precio: 75, stock: 5, categoria: "cuentas" },
-    { id: 16, nombre: "Prime Video Cuenta Completa", precio: 40, stock: 5, categoria: "cuentas" },
-    { id: 17, nombre: "ViX+ Cuenta Completa (1 Mes)", precio: 55, stock: 5, categoria: "cuentas" },
-    { id: 18, nombre: "ViX+ Cuenta Completa (2 Meses)", precio: 75, stock: 5, categoria: "cuentas" },
-    { id: 19, nombre: "Crunchyroll Cuenta Completa", precio: 50, stock: 5, categoria: "cuentas" },
-    { id: 20, nombre: "Paramount+ Cuenta Completa", precio: 50, stock: 5, categoria: "cuentas" },
-    { id: 21, nombre: "Apple TV+ Cuenta Completa", precio: 50, stock: 5, categoria: "cuentas" },
-    { id: 22, nombre: "Flujo TV Cuenta Completa", precio: 80, stock: 5, categoria: "cuentas" },
+// Función para cargar los productos desde Firebase en tiempo real
+async function cargarProductosDesdeFirebase() {
+    try {
+        // Buscamos tu carpeta principal 'Products' en la base de datos
+        const querySnapshot = await getDocs(collection(db, "Products"));
+        const productosLive = [];
+        
+        querySnapshot.forEach((doc) => {
+            productosLive.push({ id: doc.id, ...doc.data() });
+        });
 
-    // --- MÚSICA ---
-    { id: 23, nombre: "Spotify Premium Cuenta", precio: 70, stock: 8, categoria: "musica" },
-    { id: 24, nombre: "YouTube Individual (1 Mes)", precio: 50, stock: 8, categoria: "musica" },
-    { id: 25, nombre: "YouTube Individual (3 Meses)", precio: 60, stock: 8, categoria: "musica" },
-    { id: 26, nombre: "YouTube Familiar Cuenta", precio: 80, stock: 8, categoria: "musica" },
-    { id: 27, nombre: "Amazon Music / Deezer", precio: 50, stock: 8, categoria: "musica" },
+        // Mandamos la lista viva a que se dibuje en la pantalla
+        mostrarProductosEnTienda(productosLive);
+    } catch (error) {
+        console.error("Error al cargar el inventario: ", error);
+    }
+}
 
-    // --- TRABAJO Y TRÁMITES ---
-    { id: 28, nombre: "Canva Pro (1 Mes)", precio: 40, stock: 15, categoria: "tramites" },
-    { id: 29, nombre: "Canva Pro (3 Meses)", precio: 99, stock: 15, categoria: "tramites" },
-    { id: 30, nombre: "Canva Pro (12 Meses)", precio: 200, stock: 15, categoria: "tramites" },
-    { id: 31, nombre: "ChatGPT Plus Premium (1 Mes)", precio: 70, stock: 15, categoria: "tramites" },
-    { id: 32, nombre: "Trámite de Actas Oficiales", precio: 60, stock: 99, categoria: "tramites" }
-];
+// Función que genera las tarjetas de servicios en tu página web
+function mostrarProductosEnTienda(productos) {
+    const contenedor = document.getElementById("contenedor-productos"); 
+    if (!contenedor) return;
+    
+    contenedor.innerHTML = ""; // Limpiamos la pantalla antes de cargar
 
+    productos.forEach(producto => {
+        // Si el stock es mayor a 0, está disponible
+        const tieneStock = producto.stock > 0;
+        
+        const tarjeta = document.createElement("div");
+        tarjeta.className = "tarjeta-producto";
+        tarjeta.innerHTML = `
+            <h3>${producto.nombre || producto.Name}</h3>
+            <p class="precio">$${producto.precio || producto.Price} cr.</p>
+            <p class="stock">Disponibles: ${producto.stock}</p>
+            <button 
+                onclick="solicitarServicio('${producto.id}', '${producto.nombre || producto.Name}', ${producto.precio || producto.Price})"
+                class="btn-servicio ${tieneStock ? 'disponible' : 'agotado'}" 
+                ${tieneStock ? '' : 'disabled'}>
+                ${tieneStock ? 'Solicitar Servicio' : 'Agotado'}
+            </button>
+        `;
+        contenedor.appendChild(tarjeta);
+    });
+}
+
+// Arrancar la carga automática cuando la página termine de abrirse
+document.addEventListener("DOMContentLoaded", () => {
+    cargarProductosDesdeFirebase();
+});
         let usuarioLogueado = null;
         let saldoActual = 0;
 
