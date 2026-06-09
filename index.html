@@ -195,38 +195,46 @@
 
         // Lista de tus 31 servicios de streaming oficiales
         const listaProductos = [
-            { id: 1, nombre: "Netflix Perfil Privado", precio: 40, stock: 10 },
-            { id: 2, nombre: "Netflix Combo 2 Pantallas", precio: 75, stock: 5 },
-            { id: 3, nombre: "Netflix Cuenta Completa Premium", precio: 170, stock: 3 },
-            { id: 4, nombre: "Disney+ Estándar Perfil", precio: 35, stock: 12 },
-            { id: 5, nombre: "Disney+ Premium Perfil", precio: 50, stock: 8 },
-            { id: 6, nombre: "Disney+ Cuenta Completa", precio: 150, stock: 4 },
-            { id: 7, nombre: "Max (HBO) Estándar Perfil", precio: 30, stock: 15 },
-            { id: 8, nombre: "Max (HBO) Premium Perfil", precio: 45, stock: 9 },
-            { id: 9, nombre: "Max Cuenta Completa Premium", text: "Mes completo", precio: 130, stock: 5 },
-            { id: 10, nombre: "Prime Video Perfil Privado", precio: 25, stock: 20 },
-            { id: 11, nombre: "Prime Video Cuenta Completa", precio: 90, stock: 6 },
-            { id: 12, nombre: "Paramount+ Perfil Privado", precio: 25, stock: 10 },
-            { id: 13, nombre: "Paramount+ Cuenta Completa", precio: 80, stock: 4 },
-            { id: 14, nombre: "Crunchyroll Mega Fan Perfil", precio: 20, stock: 25 },
-            { id: 15, nombre: "Crunchyroll Cuenta Completa", precio: 70, stock: 8 },
-            { id: 16, nombre: "Vix Premium Perfil Privado", precio: 30, stock: 14 },
-            { id: 17, nombre: "Vix Premium Cuenta Completa", precio: 110, stock: 5 },
-            { id: 18, nombre: "Apple TV+ Perfil Privado", precio: 30, stock: 10 },
-            { id: 19, nombre: "Apple TV+ Cuenta Completa", precio: 100, stock: 3 },
-            { id: 20, nombre: "Spotify Premium 1 Mes Renovables", precio: 35, stock: 30 },
-            { id: 21, nombre: "Spotify Premium 3 Meses", precio: 85, stock: 15 },
-            { id: 22, nombre: "YouTube Premium 1 Mes Cuenta Nueva", precio: 25, stock: 40 },
-            { id: 23, nombre: "YouTube Premium 4 Meses Correo Inv.", precio: 70, stock: 20 },
-            { id: 24, nombre: "Amazon Music Unlimited 1 Mes", precio: 25, stock: 15 },
-            { id: 25, nombre: "Deezer Premium 1 Mes", precio: 25, stock: 10 },
-            { id: 26, nombre: "Plex Pass Mensual Perfil", precio: 35, stock: 8 },
-            { id: 27, nombre: "IPTV Estándar 1 Demo / Mes", precio: 60, stock: 12 },
-            { id: 28, nombre: "IPTV Premium 3 Dispositivos", precio: 140, stock: 7 },
-            { id: 29, nombre: "Combo Total (Netflix+Disney+Max)", precio: 110, stock: 5 },
-            { id: 30, nombre: "Combo Música (Spotify+YouTube) 1M", precio: 50, stock: 10 },
-            { id: 31, nombre: "Canva Pro Garantía 1 Año", precio: 50, stock: 50 }
-        ];
+    // --- PERFILES (CUENTAS COMPARTIDAS) ---
+    { id: 1, nombre: "Netflix Perfil Privado", precio: 75, stock: 10, categoria: "perfiles" },
+    { id: 2, nombre: "Netflix Perfil Compartido", precio: 65, stock: 10, categoria: "perfiles" },
+    { id: 3, nombre: "Disney+ Premium Perfil", precio: 40, stock: 10, categoria: "perfiles" },
+    { id: 4, nombre: "Max (HBO) Estándar Perfil", precio: 30, stock: 10, categoria: "perfiles" },
+    { id: 5, nombre: "Max (HBO) Platino Perfil", precio: 39, stock: 10, categoria: "perfiles" },
+    { id: 6, nombre: "Prime Video Perfil", precio: 30, stock: 10, categoria: "perfiles" },
+    { id: 7, nombre: "ViX+ Perfil (1 Mes)", precio: 22, stock: 10, categoria: "perfiles" },
+    { id: 8, nombre: "ViX+ Perfil (2 Meses)", precio: 45, stock: 10, categoria: "perfiles" },
+    { id: 9, nombre: "Crunchyroll Perfil", precio: 49, stock: 10, categoria: "perfiles" },
+    { id: 10, nombre: "Paramount+ Perfil", precio: 49, stock: 10, categoria: "perfiles" },
+    { id: 11, nombre: "Apple TV+ Perfil", precio: 49, stock: 10, categoria: "perfiles" },
+    { id: 12, nombre: "Flujo TV Perfil", precio: 49, stock: 10, categoria: "perfiles" },
+
+    // --- CUENTAS COMPLETAS (PRIVADAS) ---
+    { id: 13, nombre: "Disney+ Premium Cuenta Completa", precio: 90, stock: 5, categoria: "cuentas" },
+    { id: 14, nombre: "Max (HBO) Estándar Cuenta Completa", precio: 50, stock: 5, categoria: "cuentas" },
+    { id: 15, nombre: "Max (HBO) Platino Cuenta Completa", precio: 75, stock: 5, categoria: "cuentas" },
+    { id: 16, nombre: "Prime Video Cuenta Completa", precio: 40, stock: 5, categoria: "cuentas" },
+    { id: 17, nombre: "ViX+ Cuenta Completa (1 Mes)", precio: 55, stock: 5, categoria: "cuentas" },
+    { id: 18, nombre: "ViX+ Cuenta Completa (2 Meses)", precio: 75, stock: 5, categoria: "cuentas" },
+    { id: 19, nombre: "Crunchyroll Cuenta Completa", precio: 50, stock: 5, categoria: "cuentas" },
+    { id: 20, nombre: "Paramount+ Cuenta Completa", precio: 50, stock: 5, categoria: "cuentas" },
+    { id: 21, nombre: "Apple TV+ Cuenta Completa", precio: 50, stock: 5, categoria: "cuentas" },
+    { id: 22, nombre: "Flujo TV Cuenta Completa", precio: 80, stock: 5, categoria: "cuentas" },
+
+    // --- MÚSICA ---
+    { id: 23, nombre: "Spotify Premium Cuenta", precio: 70, stock: 8, categoria: "musica" },
+    { id: 24, nombre: "YouTube Individual (1 Mes)", precio: 50, stock: 8, categoria: "musica" },
+    { id: 25, nombre: "YouTube Individual (3 Meses)", precio: 60, stock: 8, categoria: "musica" },
+    { id: 26, nombre: "YouTube Familiar Cuenta", precio: 80, stock: 8, categoria: "musica" },
+    { id: 27, nombre: "Amazon Music / Deezer", precio: 50, stock: 8, categoria: "musica" },
+
+    // --- TRABAJO Y TRÁMITES ---
+    { id: 28, nombre: "Canva Pro (1 Mes)", precio: 40, stock: 15, categoria: "tramites" },
+    { id: 29, nombre: "Canva Pro (3 Meses)", precio: 99, stock: 15, categoria: "tramites" },
+    { id: 30, nombre: "Canva Pro (12 Meses)", precio: 200, stock: 15, categoria: "tramites" },
+    { id: 31, nombre: "ChatGPT Plus Premium (1 Mes)", precio: 70, stock: 15, categoria: "tramites" },
+    { id: 32, nombre: "Trámite de Actas Oficiales", precio: 60, stock: 99, categoria: "tramites" }
+];
 
         let usuarioLogueado = null;
         let saldoActual = 0;
