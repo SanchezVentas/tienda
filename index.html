@@ -2,355 +2,420 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SANCHEZ VENTAS - Plataforma Oficial</title>
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #25d366;
+            --accent-hover: #1ebd58;
+            --danger-color: #ef4444;
+        }
+
         body {
-            background-color: #0e1118;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            color: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            padding: 20px;
         }
 
-        /* Barra superior fija */
-        .barra-superior {
-            width: 100%;
-            background-color: #161b26;
-            padding: 15px 0;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-bottom: 1px solid #232d3f;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nombre-cliente {
-            font-size: 15px;
-            font-weight: 600;
-            color: #9ca3af;
-        }
-
-        .saldo-recuadro {
-            background-color: #10b981;
-            color: white;
-            padding: 6px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 15px;
-        }
-
-        /* Panel de control de Sánchez */
-        .panel-simulador {
-            margin-top: 90px;
-            background-color: #1e2533;
-            border: 1px dashed #3b82f6;
-            width: 85%;
+        .container {
             max-width: 1200px;
-            padding: 15px;
-            border-radius: 8px;
+            margin: 0 auto;
+        }
+
+        header {
             display: flex;
-            gap: 15px;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--card-bg);
+            margin-bottom: 30px;
         }
 
-        .panel-simulador select, .panel-simulador input {
-            background-color: #0e1118;
-            border: 1px solid #232d3f;
-            color: white;
-            padding: 8px;
-            border-radius: 4px;
-        }
-
-        .btn-admin {
-            background-color: #2563eb;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        /* Contenedor del catálogo */
-        .contenedor {
-            width: 90%;
-            max-width: 1200px;
-            padding-bottom: 60px;
-        }
-
-        .titulo-seccion {
-            border-left: 4px solid #3b82f6;
-            padding-left: 12px;
-            margin: 40px 0 20px 0;
-            color: #e5e7eb;
-            font-size: 19px;
-            font-weight: 600;
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            color: var(--accent-color);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
+        .auth-box {
+            max-width: 400px;
+            margin: 100px auto;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-box h2 {
+            margin-top: 0;
+            text-align: center;
+            color: var(--accent-color);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #475569;
+            background-color: #0f172a;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            color: #0f172a;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #94a3b8;
+            cursor: pointer;
+        }
+
+        .user-info {
+            background-color: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: 8px;
+            text-align: right;
+        }
+
+        .user-info span {
+            display: block;
+            font-size: 14px;
+        }
+
+        .user-info .saldo-val {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .btn-logout {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            width: auto;
+            margin-top: 5px;
+        }
+
         .grid-productos {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
         }
 
-        /* Tarjeta profesional */
-        .tarjeta {
-            background-color: #161b26;
-            border: 1px solid #232d3f;
-            border-radius: 8px;
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
             padding: 20px;
             text-align: center;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            height: 210px;
-            transition: 0.3s;
         }
 
-        .tarjeta.agotado {
-            opacity: 0.35;
-            border-color: #3f1616;
-        }
-
-        .logo-box {
-            width: 45px;
-            height: 45px;
-            margin: 0 auto 10px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 13px;
-            color: white;
-        }
-
-        .prod-titulo {
-            font-size: 14px;
-            font-weight: 600;
-            margin: 5px 0;
-            color: #f3f4f6;
-        }
-
-        .prod-precio {
+        .card h3 {
+            margin: 0 0 10px 0;
             font-size: 18px;
-            color: #10b981;
-            margin: 2px 0;
-            font-weight: 700;
         }
 
-        .stock-status {
-            font-size: 12px;
+        .precio {
+            font-size: 22px;
             font-weight: bold;
-            margin-bottom: 12px;
+            color: var(--accent-color);
+            margin: 10px 0;
         }
-        .en-stock { color: #3b82f6; }
-        .sin-stock { color: #ef4444; }
 
-        .btn-solicitar {
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            padding: 9px;
+        .stock {
             font-size: 13px;
-            font-weight: 600;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .btn-solicitar:disabled {
-            background-color: #232d3f;
-            color: #6b7280;
-            cursor: not-allowed;
+            color: #94a3b8;
+            margin-bottom: 15px;
         }
     </style>
-</head>
-<body>
 
-    <div class="barra-superior">
-        <div class="nombre-cliente" id="nombre-pantalla">👤 Cliente: Cargando...</div>
-        <div class="saldo-recuadro" id="txt-saldo">Saldo: $0.00</div>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <div class="panel-simulador">
-        <strong style="color: #3b82f6;">⚙️ Panel Sánchez:</strong>
-        
-        <label>Cambiar Usuario:</label>
-        <select id="select-usuario" onchange="cambiarUsuario()">
-            <option value="Juan_Pro">Juan_Pro</option>
-            <option value="Luis_Gamer">Luis_Gamer</option>
-            <option value="Fabi_Test">Fabi_Test</option>
-        </select>
-
-        <label>Simular Recarga ($):</label>
-        <input type="number" id="monto-recarga" value="200" style="width: 70px;">
-        <button class="btn-admin" onclick="recargarSaldo()">Aplicar Recarga</button>
-    </div>
-
-    <div class="contenedor" id="catalogo"></div>
-
-    <script>
-        // BASE DE DATOS DE CLIENTES DE PRUEBA
-        const usuarios = {
-            "Juan_Pro": { saldo: 150 },
-            "Luis_Gamer": { saldo: 40 },
-            "Fabi_Test": { saldo: 1000 } // Usuario con presupuesto alto para pruebas
+        // =================================================================
+        // CONFIGURA TU LLAVE SECRETA AQUÍ ABAJO:
+        // Copia y pega aquí exactamente el objeto 'firebaseConfig' de tu foto
+        // =================================================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZuKg_9i01rNsoEnt8-oQ1XkkG0yCsfDE",
+            authDomain: "sanchez-ventas.firebaseapp.com",
+            projectId: "sanchez-ventas",
+            storageBucket: "sanchez-ventas.appspot.com",
+            messagingSenderId: "740056330272",
+            appId: "1:740056330272:web:568fa9a7efdd29c03d0c40"
         };
-        
-        let usuarioActivo = "Juan_Pro";
 
-        // BASE DE DATOS DE LOS 31 SERVICIOS REALES DE SANCHEZ VENTAS
+        // Tu número de WhatsApp real para recibir las notificaciones de compra
+        const TU_WHATSAPP = "526321051982"; 
+
+        // Inicializamos Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Lista de tus 31 servicios de streaming oficiales
         const listaProductos = [
-            /* --- CATEGORÍA 1: PERFILES --- */
-            { id: 1, nombre: "Netflix Privado", precio: 75, categoria: "📺 Perfiles Compartidos", color: "#e50914", sigla: "NFLX", stock: 5 },
-            { id: 2, nombre: "Netflix Compartido", precio: 65, categoria: "📺 Perfiles Compartidos", color: "#e50914", sigla: "NFLX", stock: 4 },
-            { id: 3, nombre: "Disney Premium", precio: 40, categoria: "📺 Perfiles Compartidos", color: "#0063e5", sigla: "DISN", stock: 6 },
-            { id: 4, nombre: "Max Estándar", precio: 30, categoria: "📺 Perfiles Compartidos", color: "#0026ff", sigla: "MAX", stock: 5 },
-            { id: 5, nombre: "Max Platino", precio: 39, categoria: "📺 Perfiles Compartidos", color: "#0026ff", sigla: "MAX", stock: 0 }, // Agotado intencional
-            { id: 6, nombre: "Prime Video", precio: 30, categoria: "📺 Perfiles Compartidos", color: "#00a8e1", sigla: "PRIME", stock: 5 },
-            { id: 7, nombre: "Vix (1 Mes)", precio: 30, categoria: "📺 Perfiles Compartidos", color: "#ff5a00", sigla: "VIX", stock: 3 },
-            { id: 8, nombre: "Vix (2 Meses)", precio: 49, categoria: "📺 Perfiles Compartidos", color: "#ff5a00", sigla: "VIX", stock: 5 },
-            { id: 9, nombre: "Crunchyroll", precio: 49, categoria: "📺 Perfiles Compartidos", color: "#f47521", sigla: "CR", stock: 5 },
-            { id: 10, nombre: "Paramount+", precio: 49, categoria: "📺 Perfiles Compartidos", color: "#0057b8", sigla: "PMNT", stock: 4 },
-            { id: 11, nombre: "Apple TV+", precio: 49, categoria: "📺 Perfiles Compartidos", color: "#222222", sigla: "APPL", stock: 5 },
-            { id: 12, nombre: "Flujo TV", precio: 49, categoria: "📺 Perfiles Compartidos", color: "#6d28d9", sigla: "FTV", stock: 5 },
-
-            /* --- CATEGORÍA 2: CUENTAS COMPLETAS --- */
-            { id: 13, nombre: "Disney Premium (Completa)", precio: 90, categoria: "🔥 Cuentas Completas (Privadas)", color: "#0063e5", sigla: "DISN", stock: 5 },
-            { id: 14, nombre: "Max Estándar (Completa)", precio: 50, categoria: "🔥 Cuentas Completas (Privadas)", color: "#0026ff", sigla: "MAX", stock: 5 },
-            { id: 15, nombre: "Max Platino (Completa)", precio: 75, categoria: "🔥 Cuentas Completas (Privadas)", color: "#0026ff", sigla: "MAX", stock: 3 },
-            { id: 16, nombre: "Prime Video (Completa)", precio: 40, categoria: "🔥 Cuentas Completas (Privadas)", color: "#00a8e1", sigla: "PRIME", stock: 5 },
-            { id: 17, nombre: "Vix 1M (Completa)", precio: 55, categoria: "🔥 Cuentas Completas (Privadas)", color: "#ff5a00", sigla: "VIX", stock: 5 },
-            { id: 18, nombre: "Vix 2M (Completa)", precio: 75, categoria: "🔥 Cuentas Completas (Privadas)", color: "#ff5a00", sigla: "VIX", stock: 2 },
-            { id: 19, nombre: "Crunchyroll (Completa)", precio: 50, categoria: "🔥 Cuentas Completas (Privadas)", color: "#f47521", sigla: "CR", stock: 5 },
-            { id: 20, nombre: "Paramount+ (Completa)", precio: 50, categoria: "🔥 Cuentas Completas (Privadas)", color: "#0057b8", sigla: "PMNT", stock: 5 },
-            { id: 21, nombre: "Apple TV+ (Completa)", precio: 50, categoria: "🔥 Cuentas Completas (Privadas)", color: "#222222", sigla: "APPL", stock: 4 },
-            { id: 22, nombre: "Flujo TV (Completa)", precio: 80, categoria: "🔥 Cuentas Completas (Privadas)", color: "#6d28d9", sigla: "FTV", stock: 5 },
-
-            /* --- CATEGORÍA 3: MÚSICA --- */
-            { id: 23, nombre: "Spotify Premium", precio: 70, categoria: "🎧 Música & Audio", color: "#1ed760", sigla: "SPOT", stock: 8 },
-            { id: 24, nombre: "YouTube Ind. (1 Mes)", precio: 50, categoria: "🎧 Música & Audio", color: "#ff0000", sigla: "YT", stock: 5 },
-            { id: 25, nombre: "YouTube Ind. (3 Meses)", precio: 60, categoria: "🎧 Música & Audio", color: "#ff0000", sigla: "YT", stock: 0 }, // Agotado intencional
-            { id: 26, nombre: "YouTube Familiar", precio: 80, categoria: "🎧 Música & Audio", color: "#ff0000", sigla: "YT", stock: 3 },
-            { id: 27, nombre: "Amazon / Deezer", precio: 50, categoria: "🎧 Música & Audio", color: "#00a8e1", sigla: "AMZN", stock: 5 },
-
-            /* --- CATEGORÍA 4: TRABAJO --- */
-            { id: 28, nombre: "Canva Pro (1 Mes)", precio: 40, categoria: "🖥️ Productividad y Herramientas", color: "#00c4cc", sigla: "CNVA", stock: 5 },
-            { id: 29, nombre: "Canva Pro (3 Meses)", precio: 99, categoria: "🖥️ Productividad y Herramientas", color: "#00c4cc", sigla: "CNVA", stock: 4 },
-            { id: 30, nombre: "Canva Pro (12 Meses)", precio: 200, categoria: "🖥️ Productividad y Herramientas", color: "#00c4cc", sigla: "CNVA", stock: 5 },
-            { id: 31, nombre: "ChatGPT Plus (1 Mes)", precio: 70, categoria: "🖥️ Productividad y Herramientas", color: "#10a37f", sigla: "GPT", stock: 2 }
+            { id: 1, nombre: "Netflix Perfil Privado", precio: 40, stock: 10 },
+            { id: 2, nombre: "Netflix Combo 2 Pantallas", precio: 75, stock: 5 },
+            { id: 3, nombre: "Netflix Cuenta Completa Premium", precio: 170, stock: 3 },
+            { id: 4, nombre: "Disney+ Estándar Perfil", precio: 35, stock: 12 },
+            { id: 5, nombre: "Disney+ Premium Perfil", precio: 50, stock: 8 },
+            { id: 6, nombre: "Disney+ Cuenta Completa", precio: 150, stock: 4 },
+            { id: 7, nombre: "Max (HBO) Estándar Perfil", precio: 30, stock: 15 },
+            { id: 8, nombre: "Max (HBO) Premium Perfil", precio: 45, stock: 9 },
+            { id: 9, nombre: "Max Cuenta Completa Premium", text: "Mes completo", precio: 130, stock: 5 },
+            { id: 10, nombre: "Prime Video Perfil Privado", precio: 25, stock: 20 },
+            { id: 11, nombre: "Prime Video Cuenta Completa", precio: 90, stock: 6 },
+            { id: 12, nombre: "Paramount+ Perfil Privado", precio: 25, stock: 10 },
+            { id: 13, nombre: "Paramount+ Cuenta Completa", precio: 80, stock: 4 },
+            { id: 14, nombre: "Crunchyroll Mega Fan Perfil", precio: 20, stock: 25 },
+            { id: 15, nombre: "Crunchyroll Cuenta Completa", precio: 70, stock: 8 },
+            { id: 16, nombre: "Vix Premium Perfil Privado", precio: 30, stock: 14 },
+            { id: 17, nombre: "Vix Premium Cuenta Completa", precio: 110, stock: 5 },
+            { id: 18, nombre: "Apple TV+ Perfil Privado", precio: 30, stock: 10 },
+            { id: 19, nombre: "Apple TV+ Cuenta Completa", precio: 100, stock: 3 },
+            { id: 20, nombre: "Spotify Premium 1 Mes Renovables", precio: 35, stock: 30 },
+            { id: 21, nombre: "Spotify Premium 3 Meses", precio: 85, stock: 15 },
+            { id: 22, nombre: "YouTube Premium 1 Mes Cuenta Nueva", precio: 25, stock: 40 },
+            { id: 23, nombre: "YouTube Premium 4 Meses Correo Inv.", precio: 70, stock: 20 },
+            { id: 24, nombre: "Amazon Music Unlimited 1 Mes", precio: 25, stock: 15 },
+            { id: 25, nombre: "Deezer Premium 1 Mes", precio: 25, stock: 10 },
+            { id: 26, nombre: "Plex Pass Mensual Perfil", precio: 35, stock: 8 },
+            { id: 27, nombre: "IPTV Estándar 1 Demo / Mes", precio: 60, stock: 12 },
+            { id: 28, nombre: "IPTV Premium 3 Dispositivos", precio: 140, stock: 7 },
+            { id: 29, nombre: "Combo Total (Netflix+Disney+Max)", precio: 110, stock: 5 },
+            { id: 30, nombre: "Combo Música (Spotify+YouTube) 1M", precio: 50, stock: 10 },
+            { id: 31, nombre: "Canva Pro Garantía 1 Año", precio: 50, stock: 50 }
         ];
 
-        function generarTienda() {
-            const contenedor = document.getElementById('catalogo');
-            contenedor.innerHTML = ""; // Limpiar antes de re-dibujar
-            
-            const categorias = [" Amos_Compartidos", "📺 Perfiles Compartidos", "🔥 Cuentas Completas (Privadas)", "🎧 Música & Audio", "🖥️ Productividad y Herramientas"];
-            const categoriasReales = [...new Set(listaProductos.map(p => p.categoria))];
+        let usuarioLogueado = null;
+        let saldoActual = 0;
 
-            categoriasReales.forEach(cat => {
-                const tituloSeccion = document.createElement('h2');
-                tituloSeccion.className = 'titulo-seccion';
-                tituloSeccion.innerText = cat;
-                contenedor.appendChild(tituloSeccion);
+        // Elementos de la interfaz
+        const authSection = document.getElementById('auth-section');
+        const tiendaSection = document.getElementById('tienda-section');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const authTitle = document.getElementById('auth-title');
+        const btnAuth = document.getElementById('btn-auth');
+        const authToggle = document.getElementById('auth-toggle');
+        const userEmailDisplay = document.getElementById('user-email');
+        const userSaldoDisplay = document.getElementById('user-saldo');
 
-                const grid = document.createElement('div');
-                grid.className = 'grid-productos';
+        let modoRegistro = false;
 
-                const productosFiltrados = listaProductos.filter(p => p.categoria === cat);
+        // Cambiar entre iniciar sesión y registrarse
+        authToggle.addEventListener('click', () => {
+            modoRegistro = !modoRegistro;
+            if (modoRegistro) {
+                authTitle.innerText = "Registrar Cliente Nuevo";
+                btnAuth.innerText = "Crear Cuenta";
+                authToggle.innerText = "¿Ya tienes cuenta? Inicia Sesión";
+            } else {
+                authTitle.innerText = "Ingreso Clientes";
+                btnAuth.innerText = "Iniciar Sesión";
+                authToggle.innerText = "¿Eres cliente nuevo? Regístrate aquí";
+            }
+        });
+
+        // Manejar el botón de Auth
+        btnAuth.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            if(!email || !password) {
+                alert("Por favor, llena todos los campos.");
+                return;
+            }
+
+            try {
+                if (modoRegistro) {
+                    // Crea usuario en la nube de Firebase de forma encriptada
+                    const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    // Le asigna saldo inicial de $0.00 en la base de datos Firestore de manera protegida
+                    await setDoc(doc(db, "usuarios", cred.user.uid), {
+                        correo: email,
+                        saldo: 0
+                    });
+                    alert("¡Cuenta creada con éxito! Bienvenido.");
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                }
+            } catch (error) {
+                alert("Error de autenticación: " + error.message);
+            }
+        });
+
+        // Botón cerrar sesión
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        // Listener de estado de autenticación (Monitorea si hay alguien conectado)
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                usuarioLogueado = user;
+                authSection.style.display = 'none';
+                tiendaSection.style.display = 'block';
+                userEmailDisplay.innerText = user.email;
                 
-                productosFiltrados.forEach(prod => {
-                    const estaAgotado = prod.stock === 0;
-                    
-                    const tarjeta = document.createElement('div');
-                    tarjeta.className = "tarjeta" + (estaAgotado ? " agotado" : "");
-                    
-                    tarjeta.innerHTML = `
-                        <div>
-                            <div class="logo-box" style="background-color: ${prod.color};">${prod.sigla}</div>
-                            <div class="prod-titulo">${prod.nombre}</div>
-                            <div class="prod-precio">$${prod.precio}.00</div>
-                            <div class="stock-status ${estaAgotado ? 'sin-stock' : 'en-stock'}">
-                                ${estaAgotado ? 'Acabado' : prod.stock + ' disponibles'}
-                            </div>
-                        </div>
-                        <button class="btn-solicitar" ${estaAgotado ? 'disabled' : ''} onclick="comprar(${prod.id})">
-                            ${estaAgotado ? 'Agotado' : 'Solicitar'}
-                        </button>
-                    `;
-                    grid.appendChild(tarjeta);
-                });
+                // Traer el saldo protegido desde los servidores de Google Firebase
+                const userDoc = await getDoc(doc(db, "usuarios", user.uid));
+                if (userDoc.exists()) {
+                    saldoActual = userDoc.data().saldo;
+                    userSaldoDisplay.innerText = saldoActual;
+                }
+                generarTienda();
+            } else {
+                usuarioLogueado = null;
+                authSection.style.display = 'block';
+                tiendaSection.style.display = 'none';
+            }
+        });
 
-                contenedor.appendChild(grid);
+        // Renderizar las tarjetas en la pantalla
+        function generarTienda() {
+            const grid = document.getElementById('grid-productos');
+            grid.innerHTML = '';
+
+            listaProductos.forEach(prod => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h3>${prod.nombre}</h3>
+                    <div class="precio">$${prod.precio} cr.</div>
+                    <div class="stock">Disponibles: ${prod.stock}</div>
+                    <button id="btn-prod-${prod.id}">${prod.stock > 0 ? 'Solicitar Servicio' : 'Agotado'}</button>
+                `;
+                grid.appendChild(card);
+
+                const btn = card.querySelector(`#btn-prod-${prod.id}`);
+                if (prod.stock <= 0) {
+                    btn.style.backgroundColor = '#475569';
+                    btn.disabled = true;
+                } else {
+                    btn.addEventListener('click', () => comprar(prod));
+                }
             });
         }
 
-         function comprar(idProducto) {
-            const prod = listaProductos.find(p => p.id === idProducto);
-            let datosUsuario = usuarios[usuarioActivo];
+        // Función de compra Blindada y Conectada a WhatsApp
+        async function comprar(prod) {
+            if (!usuarioLogueado) return;
 
-            if (datosUsuario.saldo >= prod.precio) {
-                // 1. Hace la matemática interna
-                datosUsuario.saldo -= prod.precio;
-                prod.stock -= 1;
-                
-                actualizarInterfaz();
-                generarTienda();
-                
-                // ================= CONFIGURA TU WHATSAPP AQUÍ =================
-                // Pon tu número real con el 52 de México al inicio (sin espacios)
-                const tuTelefono = "526321051982"; 
-                
-                // 2. Arma el mensaje automático
-                const textoMensaje = "¡Hola Sánchez Ventas! 👋%0A%0A" +
-                                     "Acabo de solicitar un servicio desde la plataforma.%0A%0A" +
-                                     "👤 *Cliente:* " + usuarioActivo + "%0A" +
-                                     "📺 *Servicio:* " + prod.nombre + "%0A" +
-                                     "💰 *Costo:* $" + prod.precio + ".00 créditos.%0A%0A" +
-                                     "Quedo a la espera de los accesos. ¡Gracias!";
-                
-                // 3. Abre la pestaña con el chat listo
-                const urlWhatsapp = "https://wa.me/" + tuTelefono + "?text=" + textoMensaje;
-                window.open(urlWhatsapp, '_blank');
+            // 1. Validar saldo directo desde el servidor de Google (No de la pantalla)
+            const userDocRef = doc(db, "usuarios", usuarioLogueado.uid);
+            const userDoc = await getDoc(userDocRef);
+            
+            if (userDoc.exists()) {
+                const saldoReal = userDoc.data().saldo;
 
-            } else {
-                alert("Saldo Insuficiente\n" + usuarioActivo + " necesita $" + prod.precio + " créditos para este servicio.");
-            }
-        }       function cambiarUsuario() {
-            usuarioActivo = document.getElementById('select-usuario').value;
-            actualizarInterfaz();
-        }
+                if (saldoReal >= prod.precio) {
+                    const nuevoSaldo = saldoReal - prod.precio;
+                    
+                    // 2. Descontar dinero directamente en el servidor de Google
+                    await updateDoc(userDocRef, {
+                        saldo: nuevoSaldo
+                    });
 
-        function recargarSaldo() {
-            let monto = parseFloat(document.getElementById('monto-recarga').value);
-            if(monto > 0) {
-                usuarios[usuarioActivo].saldo += monto;
-                actualizarInterfaz();
-                alert("¡Saldo Cargado!\nSe agregaron $" + monto + " a la cuenta de " + usuarioActivo);
+                    // Actualiza visualmente
+                    saldoActual = nuevoSaldo;
+                    userSaldoDisplay.innerText = saldoActual;
+                    prod.stock -= 1;
+                    generarTienda();
+
+                    // 3. Lanzar redirección automática al WhatsApp de Sánchez Ventas
+                    const textoMensaje = "¡Hola Sánchez Ventas! 👋%0A%0A" +
+                                         "Acabo de solicitar un servicio desde la plataforma protegida.%0A%0A" +
+                                         "👤 *Cliente:* " + usuarioLogueado.email + "%0A" +
+                                         "📺 *Servicio:* " + prod.nombre + "%0A" +
+                                         "💰 *Costo:* $" + prod.precio + ".00 créditos.%0A" +
+                                         "📉 *Mi Saldo Restante:* $" + nuevoSaldo + ".00 créditos.%0A%0A" +
+                                         "Quedo a la espera de mis accesos. ¡Muchas gracias!";
+                    
+                    const urlWhatsapp = "https://wa.me/" + TU_WHATSAPP + "?text=" + textoMensaje;
+                    window.open(urlWhatsapp, '_blank');
+
+                } else {
+                    alert("Saldo Insuficiente.\nNecesitas $" + prod.precio + " créditos para adquirir este servicio. Comunícate con Sánchez Ventas para recargar.");
+                }
             }
         }
-
-        function actualizarInterfaz() {
-            document.getElementById('nombre-pantalla').innerText = "👤 Cliente Activo: " + usuarioActivo;
-            document.getElementById('txt-saldo').innerText = "Saldo: $" + usuarios[usuarioActivo].saldo + ".00";
-        }
-
-        // Ejecutar al cargar la página
-        generarTienda();
-        actualizarInterfaz();
     </script>
+</head>
+<body>
+
+    <div class="container">
+        <div id="auth-section" class="auth-box">
+            <h2 id="auth-title">Ingreso Clientes</h2>
+            <div class="form-group">
+                <label for="email">Correo Electrónico:</label>
+                <input type="email" id="email" placeholder="ejemplo@correo.com">
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña Secreta:</label>
+                <input type="password" id="password" placeholder="******">
+            </div>
+            <button id="btn-auth">Iniciar Sesión</button>
+            <div id="auth-toggle" class="auth-toggle">¿Eres cliente nuevo? Regístrate aquí</div>
+        </div>
+
+        <div id="tienda-section" style="display: none;">
+            <header>
+                <div>
+                    <h1>Sánchez Ventas</h1>
+                </div>
+                <div class="user-info">
+                    <span>Usuario: <strong id="user-email">...</strong></span>
+                    <span>Tu Saldo: <span class="saldo-val">$<span id="user-saldo">0</span></span> cr.</span>
+                    <button id="btn-logout" class="btn-logout">Cerrar Sesión</button>
+                </div>
+            </header>
+
+            <div id="grid-productos" class="grid-productos">
+                </div>
+        </div>
+    </div>
+
 </body>
 </html>
