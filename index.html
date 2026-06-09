@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SANCHEZ VENTAS - Plataforma Oficial</title>
+    <style>
+        body {
+            background-color: #0e1118;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Barra superior fija */
+        .barra-superior {
+            width: 100%;
+            background-color: #161b26;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-bottom: 1px solid #232d3f;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nombre-cliente {
+            font-size: 15px;
+            font-weight: 600;
+            color: #9ca3af;
+        }
+
+        .saldo-recuadro {
+            background-color: #10b981;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        /* Panel de control de Sánchez */
+        .panel-simulador {
+            margin-top: 90px;
+            background-color: #1e2533;
+            border: 1px dashed #3b82f6;
+            width: 85%;
+            max-width: 1200px;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .panel-simulador select, .panel-simulador input {
+            background-color: #0e1118;
+            border: 1px solid #232d3f;
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .btn-admin {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Contenedor del catálogo */
+        .contenedor {
+            width: 90%;
+            max-width: 1200px;
+            padding-bottom: 60px;
+        }
+
+        .titulo-seccion {
+            border-left: 4px solid #3b82f6;
+            padding-left: 12px;
+            margin: 40px 0 20px 0;
+            color: #e5e7eb;
+            font-size: 19px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .grid-productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        /* Tarjeta profesional */
+        .tarjeta {
+            background-color: #161b26;
+            border: 1px solid #232d3f;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 210px;
+            transition: 0.3s;
+        }
+
+        .tarjeta.agotado {
+            opacity: 0.35;
+            border-color: #3f1616;
+        }
+
+        .logo-box {
+            width: 45px;
+            height: 45px;
+            margin: 0 auto 10px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 13px;
+            color: white;
+        }
+
+        .prod-titulo {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 5px 0;
+            color: #f3f4f6;
+        }
+
+        .prod-precio {
+            font-size: 18px;
+            color: #10b981;
+            margin: 2px 0;
+            font-weight: 700;
+        }
+
+        .stock-status {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .en-stock { color: #3b82f6; }
+        .sin-stock { color: #ef4444; }
+
+        .btn-solicitar {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .btn-solicitar:disabled {
+            background-color: #232d3f;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="barra-superior">
+        <div class="nombre-cliente" id="nombre-pantalla">👤 Cliente: Cargando...</div>
+        <div class="saldo-recuadro" id="txt-saldo">Saldo: $0.00</div>
+    </div>
+
+    <div class="panel-simulador">
+        <strong style="color: #3b82f6;">⚙️ Panel Sánchez:</strong>
+        
+        <label>Cambiar Usuario:</label>
+        <select id="select-usuario" onchange="cambiarUsuario()">
+            <option value="Juan_Pro">Juan_Pro</option>
+            <option value="Luis_Gamer">Luis_Gamer</option>
+            <option value="Fabi_Test">Fabi_Test</option>
+        </select>
+
+        <label>Simular Recarga ($):</label>
+        <input type="number" id="monto-recarga" value="200" style="width: 70px;">
+        <button class="btn-admin" onclick="recargarSaldo()">Aplicar Recarga</button>
+    </div>
+
+    <div class="contenedor" id="catalogo"></div>
+
+    <script>
+        // BASE DE DATOS DE CLIENTES DE PRUEBA
+        const usuarios = {
+            "Juan_Pro": { saldo: 150 },
+            "Luis_Gamer": { saldo: 40 },
+            "Fabi_Test": { saldo: 1000 } // Usuario con presupuesto alto para pruebas
+        };
+        
+        let usuarioActivo = "Juan_Pro";
+
+        // BASE DE DATOS DE LOS 31 SERVICIOS REALES DE SANCHEZ VENTAS
+        const listaProductos = [
+            /* --- CATEGORÍA 1: PERFILES --- */
+            { id: 1, nombre: "Netflix Privado", precio: 75, categoria: "📺 Perfiles Compartidos", color: "#e50914", sigla: "NFLX", stock: 5 },
+            { id: 2, nombre: "Netflix Compartido", precio: 65, categoria: "📺 Perfiles Compartidos", color: "#e50914", sigla: "NFLX", stock: 4 },
+            { id: 3, nombre: "Disney Premium", precio: 40, categoria: "📺 Perfiles Compartidos", color: "#0063e5", sigla: "DISN", stock: 6 },
+            { id: 4, nombre: "Max Estándar", precio: 30, categoria: "📺 Perfiles Compartidos", color: "#0026ff", sigla: "MAX", stock: 5 },
+            { id: 5, nombre: "Max Platino", precio: 39, categoria: "📺 Perfiles Compartidos", color: "#0026ff", sigla: "MAX", stock: 0 }, // Agotado intencional
+            { id: 6, nombre: "Prime Video", precio: 30, categoria: "📺 Perfiles Compartidos", color: "#00a8e1", sigla: "PRIME", stock: 5 },
+            { id: 7, nombre: "Vix (1 Mes)", precio: 30, categoria: "📺 Perfiles Compartidos", color: "#ff5a00", sigla: "VIX", stock: 3 },
+            { id: 8, nombre: "Vix (2 Meses)", precio: 49, categoria: "📺 Perfiles Compartidos", color: "#ff5a00", sigla: "VIX", stock: 5 },
+            { id: 9, nombre: "Crunchyroll", precio: 49, categoria: "📺 Perfiles Compartidos", color: "#f47521", sigla: "CR", stock: 5 },
+            { id: 10, nombre: "Paramount+", precio: 49, categoria: "📺 Perfiles Compartidos", color: "#0057b8", sigla: "PMNT", stock: 4 },
+            { id: 11, nombre: "Apple TV+", precio: 49, categoria: "📺 Perfiles Compartidos", color: "#222222", sigla: "APPL", stock: 5 },
+            { id: 12, nombre: "Flujo TV", precio: 49, categoria: "📺 Perfiles Compartidos", color: "#6d28d9", sigla: "FTV", stock: 5 },
+
+            /* --- CATEGORÍA 2: CUENTAS COMPLETAS --- */
+            { id: 13, nombre: "Disney Premium (Completa)", precio: 90, categoria: "🔥 Cuentas Completas (Privadas)", color: "#0063e5", sigla: "DISN", stock: 5 },
+            { id: 14, nombre: "Max Estándar (Completa)", precio: 50, categoria: "🔥 Cuentas Completas (Privadas)", color: "#0026ff", sigla: "MAX", stock: 5 },
+            { id: 15, nombre: "Max Platino (Completa)", precio: 75, categoria: "🔥 Cuentas Completas (Privadas)", color: "#0026ff", sigla: "MAX", stock: 3 },
+            { id: 16, nombre: "Prime Video (Completa)", precio: 40, categoria: "🔥 Cuentas Completas (Privadas)", color: "#00a8e1", sigla: "PRIME", stock: 5 },
+            { id: 17, nombre: "Vix 1M (Completa)", precio: 55, categoria: "🔥 Cuentas Completas (Privadas)", color: "#ff5a00", sigla: "VIX", stock: 5 },
+            { id: 18, nombre: "Vix 2M (Completa)", precio: 75, categoria: "🔥 Cuentas Completas (Privadas)", color: "#ff5a00", sigla: "VIX", stock: 2 },
+            { id: 19, nombre: "Crunchyroll (Completa)", precio: 50, categoria: "🔥 Cuentas Completas (Privadas)", color: "#f47521", sigla: "CR", stock: 5 },
+            { id: 20, nombre: "Paramount+ (Completa)", precio: 50, categoria: "🔥 Cuentas Completas (Privadas)", color: "#0057b8", sigla: "PMNT", stock: 5 },
+            { id: 21, nombre: "Apple TV+ (Completa)", precio: 50, categoria: "🔥 Cuentas Completas (Privadas)", color: "#222222", sigla: "APPL", stock: 4 },
+            { id: 22, nombre: "Flujo TV (Completa)", precio: 80, categoria: "🔥 Cuentas Completas (Privadas)", color: "#6d28d9", sigla: "FTV", stock: 5 },
+
+            /* --- CATEGORÍA 3: MÚSICA --- */
+            { id: 23, nombre: "Spotify Premium", precio: 70, categoria: "🎧 Música & Audio", color: "#1ed760", sigla: "SPOT", stock: 8 },
+            { id: 24, nombre: "YouTube Ind. (1 Mes)", precio: 50, categoria: "🎧 Música & Audio", color: "#ff0000", sigla: "YT", stock: 5 },
+            { id: 25, nombre: "YouTube Ind. (3 Meses)", precio: 60, categoria: "🎧 Música & Audio", color: "#ff0000", sigla: "YT", stock: 0 }, // Agotado intencional
+            { id: 26, nombre: "YouTube Familiar", precio: 80, categoria: "🎧 Música & Audio", color: "#ff0000", sigla: "YT", stock: 3 },
+            { id: 27, nombre: "Amazon / Deezer", precio: 50, categoria: "🎧 Música & Audio", color: "#00a8e1", sigla: "AMZN", stock: 5 },
+
+            /* --- CATEGORÍA 4: TRABAJO --- */
+            { id: 28, nombre: "Canva Pro (1 Mes)", precio: 40, categoria: "🖥️ Productividad y Herramientas", color: "#00c4cc", sigla: "CNVA", stock: 5 },
+            { id: 29, nombre: "Canva Pro (3 Meses)", precio: 99, categoria: "🖥️ Productividad y Herramientas", color: "#00c4cc", sigla: "CNVA", stock: 4 },
+            { id: 30, nombre: "Canva Pro (12 Meses)", precio: 200, categoria: "🖥️ Productividad y Herramientas", color: "#00c4cc", sigla: "CNVA", stock: 5 },
+            { id: 31, nombre: "ChatGPT Plus (1 Mes)", precio: 70, categoria: "🖥️ Productividad y Herramientas", color: "#10a37f", sigla: "GPT", stock: 2 }
+        ];
+
+        function generarTienda() {
+            const contenedor = document.getElementById('catalogo');
+            contenedor.innerHTML = ""; // Limpiar antes de re-dibujar
+            
+            const categorias = [" Amos_Compartidos", "📺 Perfiles Compartidos", "🔥 Cuentas Completas (Privadas)", "🎧 Música & Audio", "🖥️ Productividad y Herramientas"];
+            const categoriasReales = [...new Set(listaProductos.map(p => p.categoria))];
+
+            categoriasReales.forEach(cat => {
+                const tituloSeccion = document.createElement('h2');
+                tituloSeccion.className = 'titulo-seccion';
+                tituloSeccion.innerText = cat;
+                contenedor.appendChild(tituloSeccion);
+
+                const grid = document.createElement('div');
+                grid.className = 'grid-productos';
+
+                const productosFiltrados = listaProductos.filter(p => p.categoria === cat);
+                
+                productosFiltrados.forEach(prod => {
+                    const estaAgotado = prod.stock === 0;
+                    
+                    const tarjeta = document.createElement('div');
+                    tarjeta.className = "tarjeta" + (estaAgotado ? " agotado" : "");
+                    
+                    tarjeta.innerHTML = `
+                        <div>
+                            <div class="logo-box" style="background-color: ${prod.color};">${prod.sigla}</div>
+                            <div class="prod-titulo">${prod.nombre}</div>
+                            <div class="prod-precio">$${prod.precio}.00</div>
+                            <div class="stock-status ${estaAgotado ? 'sin-stock' : 'en-stock'}">
+                                ${estaAgotado ? 'Acabado' : prod.stock + ' disponibles'}
+                            </div>
+                        </div>
+                        <button class="btn-solicitar" ${estaAgotado ? 'disabled' : ''} onclick="comprar(${prod.id})">
+                            ${estaAgotado ? 'Agotado' : 'Solicitar'}
+                        </button>
+                    `;
+                    grid.appendChild(tarjeta);
+                });
+
+                contenedor.appendChild(grid);
+            });
+        }
+
+         function comprar(idProducto) {
+            const prod = listaProductos.find(p => p.id === idProducto);
+            let datosUsuario = usuarios[usuarioActivo];
+
+            if (datosUsuario.saldo >= prod.precio) {
+                // 1. Hace la matemática interna
+                datosUsuario.saldo -= prod.precio;
+                prod.stock -= 1;
+                
+                actualizarInterfaz();
+                generarTienda();
+                
+                // ================= CONFIGURA TU WHATSAPP AQUÍ =================
+                // Pon tu número real con el 52 de México al inicio (sin espacios)
+                const tuTelefono = "526321051982"; 
+                
+                // 2. Arma el mensaje automático
+                const textoMensaje = "¡Hola Sánchez Ventas! 👋%0A%0A" +
+                                     "Acabo de solicitar un servicio desde la plataforma.%0A%0A" +
+                                     "👤 *Cliente:* " + usuarioActivo + "%0A" +
+                                     "📺 *Servicio:* " + prod.nombre + "%0A" +
+                                     "💰 *Costo:* $" + prod.precio + ".00 créditos.%0A%0A" +
+                                     "Quedo a la espera de los accesos. ¡Gracias!";
+                
+                // 3. Abre la pestaña con el chat listo
+                const urlWhatsapp = "https://wa.me/" + tuTelefono + "?text=" + textoMensaje;
+                window.open(urlWhatsapp, '_blank');
+
+            } else {
+                alert("Saldo Insuficiente\n" + usuarioActivo + " necesita $" + prod.precio + " créditos para este servicio.");
+            }
+        }       function cambiarUsuario() {
+            usuarioActivo = document.getElementById('select-usuario').value;
+            actualizarInterfaz();
+        }
+
+        function recargarSaldo() {
+            let monto = parseFloat(document.getElementById('monto-recarga').value);
+            if(monto > 0) {
+                usuarios[usuarioActivo].saldo += monto;
+                actualizarInterfaz();
+                alert("¡Saldo Cargado!\nSe agregaron $" + monto + " a la cuenta de " + usuarioActivo);
+            }
+        }
+
+        function actualizarInterfaz() {
+            document.getElementById('nombre-pantalla').innerText = "👤 Cliente Activo: " + usuarioActivo;
+            document.getElementById('txt-saldo').innerText = "Saldo: $" + usuarios[usuarioActivo].saldo + ".00";
+        }
+
+        // Ejecutar al cargar la página
+        generarTienda();
+        actualizarInterfaz();
+    </script>
+</body>
+</html>
